@@ -7,8 +7,8 @@ class Modal extends React.Component {
     return (
       <div className="invis">
         <section className="modal">
-          <h3>{this.props.winner}</h3>
-          <h3>{this.props.saying}</h3>
+          <h3 className="winner">{this.props.winner}</h3>
+          <h2>{this.props.saying}</h2>
           <button className="btn" onClick={this.props.reset}> Play Again? </button>
         </section>
       </div>

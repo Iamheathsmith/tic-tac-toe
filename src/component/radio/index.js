@@ -5,7 +5,6 @@ class RadioButton extends React.Component {
   render() {
     return (
       <div className={this.props.config.divName}>
-
         <input
           type='radio'
           id={this.props.config.id}
