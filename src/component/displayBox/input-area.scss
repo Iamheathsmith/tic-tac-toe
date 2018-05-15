@@ -1,9 +1,16 @@
 .box {
-  width: 200px;
+  width: 30%;
   display: inline-block;
-  float: left;
-  outline: 1px solid black;
-  height: 200px;
+  outline: 3px solid black;
+  height: 25vw;
+  background-color: fuchsia;
+}
+
+.box4 {
+  width: 25%;
+  display: inline-block;
+  outline: 3px solid black;
+  height: 25vw;
   background-color: fuchsia;
 }
 

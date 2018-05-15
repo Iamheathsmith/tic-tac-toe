@@ -18,7 +18,8 @@ class DisplayBox extends React.Component {
 
   render() {
     return (
-      <div className="box" onClick={this.state.value === '' ? () => this.props.onPicking(this.state) : null} >
+      <div className={this.props.boardSize === 3 ? 'box' : 'box4'}
+        onClick={this.state.value === '' ? () => this.props.onPicking(this.state) : null} >
         <h1> {this.state.value} </h1>
       </div>
     );

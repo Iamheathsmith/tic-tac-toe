@@ -1,6 +1,7 @@
 
-// import './content.scss';
+import './content.scss';
 import React from 'react';
+import RadioButton from '../Radio/index';
 import { renderIf } from '../../lib/utils';
 const Check = require('../../lib/check-winner');
 import DisplayBox from '../displayBox/index';
@@ -11,6 +12,7 @@ class Content extends React.Component {
     super(props);
     this.state = {
       array: [['','',''],['','',''],['','','']],
+      size: 3,
       user: true,
       count: 0,
       last: '',
@@ -20,31 +22,43 @@ class Content extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCheckForWinner = this.handleCheckForWinner.bind(this);
     this.handleReset = this.handleReset.bind(this);
-  }
-
-  componentDidUpdate() {
-    console.log('update', this.state);
+    this.handleMode = this.handleMode.bind(this);
   }
 
   handleReset() {
-    console.log('i was clicked');
-    this.setState({array: [['','',''],['','',''],['','','']], winner: false, count: 0});
+    console.log('this is reset');
+    this.setState({array: [['','',''],['','',''],['','','']], winner: false, stalemate: false, count: 0});
+  }
+
+  handleMode(arr) {
+    console.log('test',arr);
+    if (arr === 3) {
+      console.log('inside 3');
+      this.setState({array: [['','',''],['','',''],['','','']],
+        size: 3});
+    }
+    if (arr === 4) {
+      console.log('inside 4');
+      this.setState({array: [['','','',''],['','','',''],['','','',''],['','','','']],
+        size: 4});
+    }
+    console.log('this is size', this.state);
   }
 
   handleCheckForWinner() {
-    console.log('test');
+    console.log('inside check winner');
     let checkGame = Check.checkWinner(this.state.array);
     if (checkGame === 'winner') {
       this.setState({winner: true});
     }
 
-    if (this.state.count > 8) {
-      console.log('am over 8');
+    if (this.state.count === 8) {
       this.setState({stalemate: true});
     }
   }
 
   handleSubmit(e) {
+    console.log('inside handle submit');
     let countUp = this.state.count;
 
     if (this.state.user === true) {
@@ -64,6 +78,36 @@ class Content extends React.Component {
     return (
       <div className="main">
         <header>Tic Tac Toe?</header>
+
+        <div className="holder">
+          <RadioButton
+            className="radio"
+            config={({
+              name: 'group1',
+              divName: 'radio-btn-div',
+              labelName: 'radio-btn-label',
+              id: 'radio-btn',
+              item: 3,
+            })}
+            checked="checked"
+            switchMode={this.handleMode}
+          />
+          <h3 className="mode">Original</h3>
+
+          <RadioButton
+            className="radio"
+            config={({
+              name: 'group1',
+              divName: 'radio-btn-div',
+              labelName: 'radio-btn-label',
+              id: 'radio-btn2',
+              item: 4,
+            })}
+            switchMode={this.handleMode}
+          />
+
+          <h3 className="mode">Insane</h3>
+        </div>
 
         {renderIf(this.state.winner === true,
           <Modal
@@ -87,6 +131,7 @@ class Content extends React.Component {
                 boxLocation={{arr,idx}}
                 value={this.state.array[arr][idx]}
                 onPicking={this.handleSubmit}
+                boardSize={this.state.size}
               />;
             });
           })
