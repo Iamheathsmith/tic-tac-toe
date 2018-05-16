@@ -3,7 +3,7 @@ import './content.scss';
 import React from 'react';
 import Modal from '../modal/index';
 const Bot= require('../../lib/bot');
-import RadioButton from '../Radio/index';
+import RadioButton from '../radio/index';
 import CheckBox from '../checkbox/index';
 import { renderIf } from '../../lib/utils';
 import DisplayBox from '../displayBox/index';
