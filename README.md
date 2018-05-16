@@ -1,7 +1,7 @@
 ## Tic Tac Toe game made with React.
 
 
-### [Link to live site hosted on Heroku.com](https://weather-for-you-app.herokuapp.com/)
+### [Link to live site hosted on Heroku.com](https://heath-tic-tac-toe.herokuapp.com/)
 
 This is a game of Tic Tac Toe that is made with React that does not use Redux for state management. The react component are as follows
 
