@@ -1,16 +1,19 @@
 
 import './content.scss';
 import React from 'react';
-import RadioButton from '../Radio/index';
-import { renderIf } from '../../lib/utils';
-const Check = require('../../lib/check-winner');
-import DisplayBox from '../displayBox/index';
 import Modal from '../modal/index';
+const Bot= require('../../lib/bot');
+import RadioButton from '../Radio/index';
+import CheckBox from '../checkbox/index';
+import { renderIf } from '../../lib/utils';
+import DisplayBox from '../displayBox/index';
+const Check = require('../../lib/check-winner');
 
 class Content extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      cpu: false,
       array: [['','',''],['','',''],['','','']],
       size: 3,
       user: true,
@@ -24,34 +27,53 @@ class Content extends React.Component {
     this.handleCheckForWinner = this.handleCheckForWinner.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.handleMode = this.handleMode.bind(this);
+    this.handleCpu = this.handleCpu.bind(this);
+    this.handleCpuTurn = this.handleCpuTurn.bind(this);
   }
 
   handleReset() {
     if (this.state.size === 3) {
-      this.setState({array: [['','',''],['','',''],['','','']], winner: false, stalemate: false, count: 0});
+      this.setState({array: [['','',''],['','',''],['','','']], winner: false, stalemate: false, count: 0, user: true, last: '', next: ''});
     } else {
-      this.setState({array: [['','','',''],['','','',''],['','','',''],['','','','']], winner: false, stalemate: false, count: 0});
+      this.setState({array: [['','','',''],['','','',''],['','','',''],['','','','']], winner: false, stalemate: false, count: 0, user: true, last: '', next: ''});
     }
   }
 
   handleMode(arr) {
     if (arr === 3) {
       this.setState({array: [['','',''],['','',''],['','','']],
-        size: 3});
+        size: 3, user: true, last: '', next: ''});
     }
     if (arr === 4) {
       this.setState({array: [['','','',''],['','','',''],['','','',''],['','','','']],
-        size: 4});
+        size: 4, user: true, last: '', next: ''});
     }
+  }
+
+  handleCpu() {
+    this.setState({cpu: !this.state.cpu});
+  }
+
+  handleCpuTurn() {
+    let countUp = this.state.count;
+    let nextMove = Bot.nextMove(this.state.array);
+    let temp = this.state.array;
+    temp[nextMove.i][nextMove.y] = 'O';
+    this.setState({array: temp, user: true, last: 'O', next: 'X', count: countUp + 1});
+    this.handleCheckForWinner();
+
   }
 
   handleCheckForWinner() {
     let checkGame = Check.checkWinner(this.state.array);
     if (checkGame === 'winner') {
       this.setState({winner: true});
+      return;
     } else if (this.state.count === (this.state.size * this.state.size) -1) {
       this.setState({stalemate: true});
+      return;
     }
+    return checkGame;
   }
 
   handleSubmit(e) {
@@ -61,12 +83,20 @@ class Content extends React.Component {
       let temp = this.state.array;
       temp[e.location.arr][e.location.idx] = 'X';
       this.setState({array: temp, user: false, last: 'X', next: 'O', count: countUp + 1});
-      this.handleCheckForWinner();
-    } else {
+      let canCpuGo = this.handleCheckForWinner();
+      console.log('test', canCpuGo);
+      if (this.state.cpu === true && canCpuGo === 'sorry') {
+        this.handleCpuTurn();
+      }
+      return;
+    }
+
+    if (this.state.user === false && this.state.cpu === false){
       let temp = this.state.array;
       temp[e.location.arr][e.location.idx] = 'O';
       this.setState({array: temp, user: true, last: 'O', next: 'X', count: countUp + 1});
       this.handleCheckForWinner();
+      return;
     }
   }
 
@@ -102,6 +132,16 @@ class Content extends React.Component {
           />
 
           <h3 className="mode">Insane</h3>
+
+          <CheckBox
+            config={({
+              divName: 'checkbox-div',
+              labelName: 'checkbox-label',
+              id: 'check-box',
+              name: 'checkbox',
+            })}
+            cpuMode={this.handleCpu}
+          />
 
           <h2 className={this.state.last ? 'next' : 'wait'}>{this.state.next}, you are up!</h2>
         </div>

@@ -1,0 +1,23 @@
+input[type=checkbox] {
+  display:none;
+}
+
+input[type=checkbox] + .checkbox-label {
+  display:inline-block;
+  cursor: pointer;
+  outline: 0;
+  background-image: url('../../images/form-elements-sprite.png');
+  background-position: -158px -239px;
+  width: 161px;
+  height: 161px;
+  zoom: .2;
+  }
+
+  input[type=checkbox]:checked + .checkbox-label {
+    background-position: -381px -239px;
+  }
+
+  .checkbox-div {
+    margin-left: 2%;
+    display: inline;
+  }
