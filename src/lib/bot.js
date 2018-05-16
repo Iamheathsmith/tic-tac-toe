@@ -2,7 +2,6 @@
 
 module.exports = new class {
   nextMove(grid) {
-    console.log('it broke');
     if (grid.length !== grid[0].length) return 'need to be a square';
     let empty = [];
     for (let i = 0; i < grid.length; i++) {

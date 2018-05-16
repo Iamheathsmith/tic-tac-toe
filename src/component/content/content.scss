@@ -44,6 +44,20 @@ h3 {
   margin: 20px;
 }
 
+.cpu-box {
+  display: inline-block;
+  width: 300px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.cpu-mode {
+  position: relative;
+  bottom: 10px;
+  margin-left: 10px;
+  display: inline-block;
+}
+
 @media screen and (min-width: 570px) {
   .boxes {
     width: 500px;

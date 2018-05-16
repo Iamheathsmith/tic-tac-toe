@@ -56,24 +56,25 @@ class Content extends React.Component {
 
   handleCpuTurn() {
     let countUp = this.state.count;
+    if (countUp === (this.state.size * this.state.size)) return;
     let nextMove = Bot.nextMove(this.state.array);
     let temp = this.state.array;
     temp[nextMove.i][nextMove.y] = 'O';
     this.setState({array: temp, user: true, last: 'O', next: 'X', count: countUp + 1});
     this.handleCheckForWinner();
-
+    console.log('cpu', this.state.count);
   }
 
   handleCheckForWinner() {
+    console.log('inside check winner');
     let checkGame = Check.checkWinner(this.state.array);
     if (checkGame === 'winner') {
       this.setState({winner: true});
       return;
-    } else if (this.state.count === (this.state.size * this.state.size) -1) {
+    } else if (this.state.count === (this.state.size * this.state.size)) {
       this.setState({stalemate: true});
       return;
     }
-    return checkGame;
   }
 
   handleSubmit(e) {
@@ -82,13 +83,16 @@ class Content extends React.Component {
     if (this.state.user === true) {
       let temp = this.state.array;
       temp[e.location.arr][e.location.idx] = 'X';
-      this.setState({array: temp, user: false, last: 'X', next: 'O', count: countUp + 1});
-      let canCpuGo = this.handleCheckForWinner();
-      console.log('test', canCpuGo);
-      if (this.state.cpu === true && canCpuGo === 'sorry') {
-        this.handleCpuTurn();
-      }
-      return;
+      return Promise.resolve(this.setState({array: temp, user: false, last: 'X', next: 'O', count: countUp + 1}))
+        .then(() => {
+          console.log('inside the check winner in .then');
+          this.handleCheckForWinner()
+          ;})
+        .then(() => {
+          if (this.state.cpu === true && this.state.winner === false) {
+            this.handleCpuTurn();
+          }
+        });
     }
 
     if (this.state.user === false && this.state.cpu === false){
@@ -133,15 +137,18 @@ class Content extends React.Component {
 
           <h3 className="mode">Insane</h3>
 
-          <CheckBox
-            config={({
-              divName: 'checkbox-div',
-              labelName: 'checkbox-label',
-              id: 'check-box',
-              name: 'checkbox',
-            })}
-            cpuMode={this.handleCpu}
-          />
+          <div className="cpu-box">
+            <CheckBox
+              config={({
+                divName: 'checkbox-div',
+                labelName: 'checkbox-label',
+                id: 'check-box',
+                name: 'checkbox',
+              })}
+              cpuMode={this.handleCpu}
+            />
+            <h2 className="cpu-mode">Play against CPU?</h2>
+          </div>
 
           <h2 className={this.state.last ? 'next' : 'wait'}>{this.state.next}, you are up!</h2>
         </div>
