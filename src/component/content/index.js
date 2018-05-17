@@ -2,7 +2,8 @@
 import './content.scss';
 import React from 'react';
 import Modal from '../modal/index';
-const Bot= require('../../lib/bot');
+// const Bot = require('../../lib/bot');
+const Bot2 = require('../../lib/bot2');
 import RadioButton from '../radio/index';
 import CheckBox from '../checkbox/index';
 import { renderIf } from '../../lib/utils';
@@ -13,7 +14,7 @@ class Content extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cpu: false,
+      cpu: true,
       array: [['','',''],['','',''],['','','']],
       size: 3,
       user: true,
@@ -57,16 +58,18 @@ class Content extends React.Component {
   handleCpuTurn() {
     let countUp = this.state.count;
     if (countUp === (this.state.size * this.state.size)) return;
-    let nextMove = Bot.nextMove(this.state.array);
+    // let nextMove = Bot2.nextMove(this.state.array, this.state.count);
     let temp = this.state.array;
-    temp[nextMove.i][nextMove.y] = 'O';
-    this.setState({array: temp, user: true, last: 'O', next: 'X', count: countUp + 1});
-    this.handleCheckForWinner();
-    console.log('cpu', this.state.count);
+    return Promise.resolve(Bot2.nextMove(this.state.array, this.state.count))
+      .then(nextMove => {
+        console.log('this is nextMove', nextMove);
+        temp[nextMove.i][nextMove.y] = 'O';
+        this.setState({array: temp, user: true, last: 'O', next: 'X', count: countUp + 1});
+        this.handleCheckForWinner();
+      });
   }
 
   handleCheckForWinner() {
-    console.log('inside check winner');
     let checkGame = Check.checkWinner(this.state.array);
     if (checkGame === 'winner') {
       this.setState({winner: true});
@@ -85,7 +88,6 @@ class Content extends React.Component {
       temp[e.location.arr][e.location.idx] = 'X';
       return Promise.resolve(this.setState({array: temp, user: false, last: 'X', next: 'O', count: countUp + 1}))
         .then(() => {
-          console.log('inside the check winner in .then');
           this.handleCheckForWinner()
           ;})
         .then(() => {
