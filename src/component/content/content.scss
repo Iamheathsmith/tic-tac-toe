@@ -25,23 +25,35 @@ h3 {
  }
 
 .next {
+  font-family: 'Bungee Inline', cursive;
   display: inline-block;
   float: right;
+  width: 100%;
+  text-align: right;
   margin: 20px;
   font-size: 20px;
 }
 
 .wait {
-  display: none;
+  visibility: hidden;
+  margin: 20px;
+  height: 20px;
 }
 
 .radio, .mode {
   display: inline;
 }
 
-.holder {
+.mode {
   font-family: 'Bungee Inline', cursive;
-  margin: 20px;
+}
+
+.holder-mode {
+  width: 150px;
+  display: inline-block;
+  margin-left: 20px;
+  border: 1px solid black;
+  border-radius: 3px;
 }
 
 .cpu-box {
@@ -52,6 +64,7 @@ h3 {
 }
 
 .cpu-mode {
+  font-family: 'Bungee Inline', cursive;
   position: relative;
   bottom: 10px;
   margin-left: 10px;
