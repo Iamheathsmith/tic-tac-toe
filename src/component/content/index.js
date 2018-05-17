@@ -163,6 +163,7 @@ class Content extends React.Component {
             reset={this.handleReset}
             saying='congrats you win!'
             winner={this.state.last}
+            cpu={this.state.cpu}
           />
         )}
 
