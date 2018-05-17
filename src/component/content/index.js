@@ -2,8 +2,7 @@
 import './content.scss';
 import React from 'react';
 import Modal from '../modal/index';
-// const Bot = require('../../lib/bot');
-const Bot2 = require('../../lib/bot2');
+const Bot = require('../../lib/bot');
 import RadioButton from '../radio/index';
 import CheckBox from '../checkbox/index';
 import { renderIf } from '../../lib/utils';
@@ -14,7 +13,7 @@ class Content extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cpu: true,
+      cpu: false,
       array: [['','',''],['','',''],['','','']],
       size: 3,
       user: true,
@@ -53,16 +52,15 @@ class Content extends React.Component {
 
   handleCpu() {
     this.setState({cpu: !this.state.cpu});
+    this.handleReset();
   }
 
   handleCpuTurn() {
     let countUp = this.state.count;
     if (countUp === (this.state.size * this.state.size)) return;
-    // let nextMove = Bot2.nextMove(this.state.array, this.state.count);
     let temp = this.state.array;
-    return Promise.resolve(Bot2.nextMove(this.state.array, this.state.count))
+    return Promise.resolve(Bot.nextMove(this.state.array, this.state.count))
       .then(nextMove => {
-        console.log('this is nextMove', nextMove);
         temp[nextMove.i][nextMove.y] = 'O';
         this.setState({array: temp, user: true, last: 'O', next: 'X', count: countUp + 1});
         this.handleCheckForWinner();
@@ -111,54 +109,59 @@ class Content extends React.Component {
       <div className="main">
         <header>Tic Tac Toe?</header>
 
-        <div className="holder">
-          <RadioButton
-            className="radio"
-            config={({
-              name: 'group1',
-              divName: 'radio-btn-div',
-              labelName: 'radio-btn-label',
-              id: 'radio-btn',
-              item: 3,
-            })}
-            switchMode={this.handleMode}
-          />
-          <h3 className="mode">Original</h3>
-
-          <RadioButton
-            className="radio"
-            config={({
-              name: 'group1',
-              divName: 'radio-btn-div',
-              labelName: 'radio-btn-label',
-              id: 'radio-btn2',
-              item: 4,
-            })}
-            switchMode={this.handleMode}
-          />
-
-          <h3 className="mode">Insane</h3>
-
-          <div className="cpu-box">
-            <CheckBox
+        <div className="holder-mode">
+          <div className="btn-1">
+            <RadioButton
+              className="radio"
               config={({
-                divName: 'checkbox-div',
-                labelName: 'checkbox-label',
-                id: 'check-box',
-                name: 'checkbox',
+                name: 'group1',
+                divName: 'radio-btn-div',
+                labelName: 'radio-btn-label',
+                id: 'radio-btn',
+                item: 3,
               })}
-              cpuMode={this.handleCpu}
+              switchMode={this.handleMode}
             />
-            <h2 className="cpu-mode">Play against CPU?</h2>
+            <h3 className="mode">Original</h3>
           </div>
 
-          <h2 className={this.state.last ? 'next' : 'wait'}>{this.state.next}, you are up!</h2>
+          <div className="btn-2">
+            <RadioButton
+              className="radio"
+              config={({
+                name: 'group1',
+                divName: 'radio-btn-div',
+                labelName: 'radio-btn-label',
+                id: 'radio-btn2',
+                item: 4,
+              })}
+              switchMode={this.handleMode}
+            />
+            <h3 className="mode">Insane</h3>
+          </div>
+
         </div>
+
+        <div className="cpu-box">
+          <CheckBox
+            config={({
+              divName: 'checkbox-div',
+              labelName: 'checkbox-label',
+              id: 'check-box',
+              name: 'checkbox',
+            })}
+            cpuMode={this.handleCpu}
+          />
+          <h2 className="cpu-mode">player VS CPU</h2>
+        </div>
+
+        <h2 className={this.state.last ? 'next' : 'wait'}>{this.state.next}, you are up!</h2>
+
 
         {renderIf(this.state.winner === true,
           <Modal
             reset={this.handleReset}
-            saying='congrants, you win!'
+            saying='congrats you win!'
             winner={this.state.last}
           />
         )}
