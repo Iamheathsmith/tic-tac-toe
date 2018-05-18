@@ -4,7 +4,7 @@ import './modal.scss';
 class Modal extends React.Component {
 
   render() {
-    let winner = this.props.cpu ? 'CPU' : this.props.winner;
+    let winner = this.props.cpu && this.props.winner !== 'X' ? 'CPU' : this.props.winner;
     return (
       <div className="invis">
         <section className="modal">
