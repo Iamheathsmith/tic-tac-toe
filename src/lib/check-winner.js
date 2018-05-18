@@ -8,20 +8,16 @@ module.exports = new class {
       // check across
       if (grid[i][0] !== '') {
         test = this.checkAcross(grid[i]);
-        if (test !== '') {
-          if (test.includes('winner')) {
-            return test;
-          }
+        if (test.includes('winner')) {
+          return test;
         }
       }
 
       //check down
       if (grid[0][i] !== '') {
         test = this.checkDown(grid, i);
-        if (test !== '') {
-          if (test.includes('winner')) {
-            return test;
-          }
+        if (test.includes('winner')) {
+          return test;
         }
       }
     }
@@ -29,18 +25,14 @@ module.exports = new class {
     // check diagonal
     if (grid[0][0] !== '') {
       test = this.checkDiagonalTD(grid);
-      if (test !== '') {
-        if (test.includes('winner')) {
-          return test;
-        }
+      if (test.includes('winner')) {
+        return test;
       }
     }
     if (grid[grid.length -1][0] !== '') {
       test = this.checkDiagonalBU(grid);
-      if (test !== '') {
-        if (test.includes('winner')) {
-          return test;
-        }
+      if (test.includes('winner')) {
+        return test;
       }
     }
 
