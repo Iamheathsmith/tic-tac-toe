@@ -196,11 +196,11 @@ module.exports = new class {
   }
 
   //[x,'',x]
-  checkDiagonalTD(grid, count=grid.length) {
-    if (grid[count - 1][count - 1] !== '' && count !== grid.length) {
-      return {i:count-1,y:count-1};
+  checkDiagonalTD(grid, count=grid.length -1) {
+    if (grid[count][count] === '' && count !== grid.length -1) {
+      return {i:count,y:count};
     };
-    if (grid[0][0] === grid[count - 1][count - 1]) {
+    if (grid[0][0] === grid[count][count]) {
       count--;
       return this.checkDiagonalTD(grid, count);
     } else {
