@@ -8,6 +8,10 @@
 This is a game of Tic Tac Toe that is made with React that does not use Redux for state management.
 The game has been built so you can play the Orignal way of 3x3 grid or you can play "insane mode" which goes to 4x4 grid. You still have to get 4 in a row with this size of grid to win!  We also have build a very smart CPU that will do what ever it takes to not let you win.  It will block every possible outcome and also play to win as well. Here is a list of the follow react component that we use.
 
+### Mobile first design
+
+We built this app to have a easy layout that is ment to be used on the mobile device such as a phone or a tablet. I will also adjust to work on anysize desktop screen as well.
+
 ### React component
 
 * Landing page(content) - The landing page for our components.
