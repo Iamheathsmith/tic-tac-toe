@@ -11,7 +11,7 @@ module.exports = new class {
       return {i:1, y:1};
     }
     if (count <= 2 && grid[1][1] !== '') {
-      let temp = this.pickRandom(grid);
+      let temp = this.pickCorners(grid);
       return temp;
     }
 
@@ -95,6 +95,12 @@ module.exports = new class {
       let temp = this.pickRandom(grid);
       return temp;
     }
+  }
+
+  pickCorners(grid) {
+    let corners = [{i: 0,y: 0}, {i: 0,y: grid.length -1}, {i: grid.length -1,y: grid.length -1}, {i: grid.length -1,y: 0}];
+    let picked = Math.floor(Math.random() * Math.floor(corners.length));
+    return corners[picked];
   }
 
   pickRandom(grid) {
