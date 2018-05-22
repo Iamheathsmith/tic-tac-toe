@@ -14,7 +14,7 @@ class Content extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cpu: true,
+      cpu: false,
       array: [['','',''],['','',''],['','','']],
       size: 3,
       user: true,
@@ -95,6 +95,7 @@ class Content extends React.Component {
     if (this.state.user === true) {
       let temp = this.state.array;
       temp[e.location.arr][e.location.idx] = 'X';
+      console.log('PLAYER PLAYED HERE', {i:e.location.arr, y:e.location.idx});
       return Promise.resolve(this.setState({array: temp, user: false, last: 'X', next: 'O', count: countUp + 1}))
         .then(() => {
           this.handleCheckForWinner()

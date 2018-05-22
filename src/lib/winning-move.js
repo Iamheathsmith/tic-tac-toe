@@ -7,41 +7,33 @@ module.exports = new class {
 
     //cpu 2nd and up move
     if (count > 2) {
-      let empty = [];
-      let needToUse = [];
 
       // check diagonal R.top => L.bottom
       if (grid[0][0] === 'O') {
         let now = this.checkDiagonalTDNow(grid);
-        if (now) return now;
+        if (now && grid[now.i][now.y] === '') return now;
         let test = this.checkDiagonalTD(grid);
-        if (test) {
-          return test;
-        };
+        if (test && grid[test.i][test.y] === '') return test;
       }
 
       // check diagonal L.bottom => R.top
       if (grid[0][grid.length -1] === 'O') {
         let now = this.checkDiagonalTDBack(grid);
-        if (now) {
-          return now;;
-        }
+        if (now && grid[now.i][now.y] === '')  return now;
       }
 
       // check diagonal R.bottom => L.top
       if (grid[grid.length -1][0] === 'O') {
         let now = this.checkDiagonalBUNow(grid);
-        if (now) return now;
+        if (now && grid[now.i][now.y] === '')  return now;
         let test = this.checkDiagonalBU(grid);
-        if (test) {
-          return test;
-        };
+        if (test && grid[test.i][test.y] === '') return test;
       }
 
       // check diagonal L.bottom => R.top
       if (grid[grid.length -1][grid.length -1] === 'O') {
         let now = this.checkDiagonalBUBack(grid);
-        if (now) return now;
+        if (now && grid[now.i][now.y] === '')  return now;
       }
 
       for (let i = 0; i < grid.length; i++) {
@@ -50,49 +42,38 @@ module.exports = new class {
         //check across L => R
         if (grid[i][grid.length -1] === 'O') {
           let back = this.checkAcrossBack(grid[i], i);
-          if (back) {
-            return back;
-          };
+          if (back && grid[back.i][back.y] === '') return back;
         }
 
         // check across RL =>
         if (grid[i][0] === 'O') {
           let now = this.checkAcrossNow(grid[i] ,i);
-          if (now) needToUse.push(now);
+          if (now && grid[now.i][now.y] === '')  return now;
           let test = this.checkAcross(grid[i], i);
-          if (test) {
-            return test;
-          };
+          if (test && grid[test.i][test.y] === '') return test;
         }
 
         //check down T => B
         if (grid[0][i] === 'O') {
           let now = this.checkDownNow(grid, i);
-          if (now) needToUse.push(now);
+          if (now && grid[now.i][now.y] === '') return now;
           let test = this.checkDown(grid, i);
-          if (test) {
-            return test;
-          };
+          if (test && grid[test.i][test.y] === '') return test;
         }
 
         // check bottom up
         if (grid[grid.length -1][i] === 'O') {
           let test = this.checkDownBack(grid, i);
-          if (test) {
-            return test;
-          };
+          if (test && grid[test.i][test.y] === '') return test;
         }
-      }
 
-      if (needToUse.length === 1) {
-        return needToUse[0];
-      }
-      if (empty.length === 1) {
-        return empty[0];
       }
     }
     return null;
   }
+
+
+
 
   //[x,'',x]
   checkAcross(grid, start, count=grid.length - 1, total=1) {
@@ -180,12 +161,6 @@ module.exports = new class {
       return;
     }
   }
-
-  // else if (grid[grid.length - 1][start + 1] === '' && grid[grid.length - 1][start - 1] !== '') {
-  //   return {i:grid.length - 1, y:start + 1};
-  // } else if (grid[grid.length - 1][start - 1] === '' && grid[grid.length - 1][start + 1] !== '') {
-  //   return {i:grid.length - 1, y:start - 1};
-  // }
 
   //[x,'',x]
   checkDiagonalTD(grid, count=grid.length -1, total=1) {
