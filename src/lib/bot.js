@@ -1,5 +1,7 @@
 'use strict';
 
+import Play2Win from './play-to-win';
+
 module.exports = new class {
   nextMove(grid, count) {
     if (grid.length !== grid[0].length) return 'need to be a square';
@@ -11,41 +13,39 @@ module.exports = new class {
       return {i:1, y:1};
     }
     if (count <= 2 && grid[1][1] !== '') {
-      let temp = this.pickRandom(grid);
+      let temp = this.pickCorners(grid);
       return temp;
     }
 
     //cpu 2nd and up move
     if (count > 2) {
-      let empty = [];
-      let needToUse = [];
 
       // check diagonal R.top => L.bottom
       if (grid[0][0] === 'X') {
         let now = this.checkDiagonalTDNow(grid);
-        needToUse.push(now);
+        if (now && grid[now.i][now.y] === '') return now;
         let test = this.checkDiagonalTD(grid);
-        empty.push(test);
+        if (test && grid[test.i][test.y] === '') return test;
       }
 
       // check diagonal R.left => L.right
       if (grid[0][grid.length -1] === 'X') {
         let now = this.checkDiagonalTDBack(grid);
-        needToUse.push(now);
+        if (now && grid[now.i][now.y] === '') return now;
       }
 
       // check diagonal R.bottom => L.top
       if (grid[grid.length -1][0] === 'X') {
         let now = this.checkDiagonalBUNow(grid);
-        needToUse.push(now);
+        if (now && grid[now.i][now.y] === '') return now;
         let test = this.checkDiagonalBU(grid);
-        empty.push(test);
+        if (test && grid[test.i][test.y] === '') return test;
       }
 
       // check diagonal L.bottom => R.top
       if (grid[grid.length -1][grid.length -1] === 'X') {
         let now = this.checkDiagonalBUBack(grid);
-        needToUse.push(now);
+        if (now && grid[now.i][now.y] === '') return now;
       }
 
       for (let i = 0; i < grid.length; i++) {
@@ -54,47 +54,47 @@ module.exports = new class {
         //check across L => R
         if (grid[i][grid.length -1] === 'X') {
           let back = this.checkAcrossBack(grid[i], i);
-          empty.push(back);
+          if (back && grid[back.i][back.y] === '') return back;
         }
 
         // check across RL =>
         if (grid[i][0] === 'X') {
           let now = this.checkAcrossNow(grid[i] ,i);
-          needToUse.push(now);
+          if (now && grid[now.i][now.y] === '') return now;
           let test = this.checkAcross(grid[i], i);
-          empty.push(test);
+          if (test && grid[test.i][test.y] === '') return test;
         }
 
         //check down T => B
         if (grid[0][i] === 'X') {
           let now = this.checkDownNow(grid, i);
-          needToUse.push(now);
+          if (now && grid[now.i][now.y] === '') return now;
           let test = this.checkDown(grid, i);
-          empty.push(test);
+          if (test && grid[test.i][test.y] === '') return test;
         }
 
         // check bottom up
         if (grid[grid.length -1][i] === 'X') {
           let test = this.checkDownBack(grid, i);
-          empty.push(test);
+          if (test && grid[test.i][test.y] === '') return test;
         }
       }
 
-      if (total === grid.length) {
-        for (let i = 0; i < 6; i++) {
-          if (needToUse[i] !== undefined && grid[needToUse[i].i][needToUse[i].y] === '') {
-            return needToUse[i];
-          } else {
-            if (empty[i] !== undefined && grid[empty[i].i][empty[i].y] === '') {
-              let temp = empty[i];
-              return empty[i];
-            }
-          }
-        }
+      let play = Play2Win.goForWin(grid, count);
+      if (play && grid[play.i][play.y] === '') {
+        console.log('PLAY TO WIN', play);
+        return play;
       }
+
       let temp = this.pickRandom(grid);
       return temp;
     }
+  }
+
+  pickCorners(grid) {
+    let corners = [{i: 0,y: 0}, {i: 0,y: grid.length -1}, {i: grid.length -1,y: grid.length -1}, {i: grid.length -1,y: 0}];
+    let picked = Math.floor(Math.random() * Math.floor(corners.length));
+    return corners[picked];
   }
 
   pickRandom(grid) {
@@ -107,6 +107,7 @@ module.exports = new class {
       }
     }
     let picked = Math.floor(Math.random() * Math.floor(empty.length));
+    console.log('PlAYED RANDOM', empty[picked]);
     return empty[picked];
   }
 

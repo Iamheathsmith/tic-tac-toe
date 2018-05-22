@@ -8,6 +8,7 @@ import CheckBox from '../checkbox/index';
 import { renderIf } from '../../lib/utils';
 import DisplayBox from '../displayBox/index';
 const Check = require('../../lib/check-winner');
+const BotWin = require('../../lib/winning-move');
 
 class Content extends React.Component {
   constructor(props) {
@@ -59,7 +60,17 @@ class Content extends React.Component {
     let countUp = this.state.count;
     if (countUp === (this.state.size * this.state.size)) return;
     let temp = this.state.array;
-    return Promise.resolve(Bot.nextMove(this.state.array, this.state.count))
+    return Promise.resolve(BotWin.winningMove(this.state.array, this.state.count))
+      .then(winMove => {
+        console.log('INSIDE Win', winMove);
+        if (winMove !== null) {
+          return winMove;
+        } else {
+          let temp = Bot.nextMove(this.state.array, this.state.count);
+          console.log('INSIDE Block', temp);
+          return temp;
+        }
+      })
       .then(nextMove => {
         temp[nextMove.i][nextMove.y] = 'O';
         this.setState({array: temp, user: true, last: 'O', next: 'X', count: countUp + 1});
@@ -84,6 +95,7 @@ class Content extends React.Component {
     if (this.state.user === true) {
       let temp = this.state.array;
       temp[e.location.arr][e.location.idx] = 'X';
+      console.log('PLAYER PLAYED HERE', {i:e.location.arr, y:e.location.idx});
       return Promise.resolve(this.setState({array: temp, user: false, last: 'X', next: 'O', count: countUp + 1}))
         .then(() => {
           this.handleCheckForWinner()
